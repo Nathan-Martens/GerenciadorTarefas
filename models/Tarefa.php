@@ -1,20 +1,21 @@
 <?php
 
-include "Responsavel.php";
-
 class Tarefas
 {
     private int $id;
     private string $titulo;
     private string $descricao;
     private Responsavel $responsavel;
+    private string $status;
 
-    public function __construct(?int $id = null, string $titulo, string $descricao, Responsavel $responsavel)
+    // public function __construct(?int $id = null, string $titulo, string $descricao, Responsavel $responsavel)
+    public function __construct(string $titulo, string $descricao, Responsavel $responsavel, string $status)
     {
-        $this->setId($id);
+        //$this->setId($id);
         $this->setTitulo($titulo);
         $this->setDescricao($descricao);
         $this->setResponsavel($responsavel);
+        $this->setStatus($status);
     }
 
     public function setId(?int $id): void
@@ -34,6 +35,11 @@ class Tarefas
         $this->responsavel = $responsavel;
     }
 
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -50,4 +56,10 @@ class Tarefas
     {
         return $this->responsavel;
     }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
 }

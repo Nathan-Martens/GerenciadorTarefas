@@ -7,9 +7,9 @@ class Conexao{
     {
         if(self::$instancia === null){
             try{
-                $conectar = "mysql:localhost;dbname=genciadorTarefas";
+                $conectar = "mysql:host=localhost;port=3307;dbname=gerenciamento_tarefas;charset=utf8mb4";
                 $usuario = "root";
-                $senha = "";
+                $senha = "Senac@123";
 
                 self::$instancia = new PDO ($conectar, $usuario, $senha);
 
