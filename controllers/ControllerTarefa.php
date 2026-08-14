@@ -41,5 +41,8 @@ class controllerTarefa
         return $this->daoTarefa->listarTodas();
     }
     
+    public function buscarTarefa($id): Tarefas{
+        return $this->daoTarefa->buscarTarefa($id);
+    }
 
 }

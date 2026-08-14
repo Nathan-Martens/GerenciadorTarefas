@@ -49,5 +49,25 @@ class DaoTarefa
 
         return $lista;
     }
+    
+    public function buscarTarefa($id) : Tarefas{
+        $sql = "SELECT t.id, t.titulo, t.descricao, t.id_responsavel, t.status,
+        r.id as 'id_resp', r.nome
+        FROM tarefa as t, responsavel as r WHERE t.id = :id and t.id_responsavel = r.id";
 
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':id'=>$id]);
+
+        $resultado = $stmt->fetchALL(PDO::FETCH_ASSOC);
+        foreach($resultado as $linha){
+
+            $responsavel = new Responsavel($linha['id_resp'], $linha['nome']);
+
+            $tarefa = new Tarefas ($linha['titulo'],$linha['descricao'], $responsavel, $linha['status']);
+            $tarefa->setId($linha['id']);
+            $tarefa;
+        }
+
+        return $tarefa;
+    }
 }
