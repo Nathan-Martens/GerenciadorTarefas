@@ -13,7 +13,8 @@ class DaoTarefa
         $this->conn = Conexao::getConexao();
     }
 
-    public function inserir(Tarefas $tarefas){
+    public function inserir(Tarefas $tarefas)
+    {
         $sql = "INSERT INTO tarefa (titulo, descricao, id_responsavel, status)
         VALUES (:titulo, :descricao, :id_responsavel, :status)";
 
@@ -21,13 +22,41 @@ class DaoTarefa
         $id_responsavel = $tarefas->getResponsavel()->getId();
 
         return $stmt->execute([
+            ':titulo' => $tarefas->getTitulo(),
+            ':descricao' => $tarefas->getDescricao(),
+            ':id_responsavel' => $id_responsavel,
+            ':status' => $tarefas->getStatus()
+        ]);
+    }
+    public function editar(Tarefas $tarefas)
+    {
+        $sql = "UPDATE tarefa SET titulo = :titulo, descricao = :descricao, id_responsavel =:id_responsavel, status = :status
+        WHERE :titulo, :descricao, :id_responsavel, :status";
+
+        $stmt = $this->conn->prepare($sql);
+        $id_responsavel = $tarefas->getResponsavel()->getId();
+
+        return $stmt->execute([
+            ':id'=> $tarefas->getId(),
             ':titulo'=> $tarefas->getTitulo(),
             ':descricao'=> $tarefas->getDescricao(),
             ':id_responsavel'=> $id_responsavel,
             ':status'=> $tarefas->getStatus()
         ]);
     }
-    public function listarTodas():array{
+    public function excluir($id): bool
+    {
+        $sql = "DELETE from tarefa where id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([
+           ':id' => $id,
+        ]);
+    }
+
+    public function listarTodas(): array
+    {
         $sql = "SELECT t.id, t.titulo, t.descricao, t.id_responsavel, t.status,
         r.id as 'id_resp', r.nome
         FROM tarefa as t, responsavel as r WHERE t.id_responsavel = r.id";
@@ -37,11 +66,11 @@ class DaoTarefa
         $resultado = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
         $lista = [];
-        foreach($resultado as $linha){
+        foreach ($resultado as $linha) {
 
             $responsavel = new Responsavel($linha['id_resp'], $linha['nome']);
 
-            $tarefa = new Tarefas ($linha['titulo'],$linha['descricao'], $responsavel, $linha['status']);
+            $tarefa = new Tarefas($linha['titulo'], $linha['descricao'], $responsavel, $linha['status']);
             $tarefa->setId($linha['id']);
 
             $lista[] = $tarefa;
@@ -49,21 +78,22 @@ class DaoTarefa
 
         return $lista;
     }
-    
-    public function buscarTarefa($id) : Tarefas{
+
+    public function buscarTarefa($id): Tarefas
+    {
         $sql = "SELECT t.id, t.titulo, t.descricao, t.id_responsavel, t.status,
         r.id as 'id_resp', r.nome
         FROM tarefa as t, responsavel as r WHERE t.id = :id and t.id_responsavel = r.id";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([':id'=>$id]);
+        $stmt->execute([':id' => $id]);
 
         $resultado = $stmt->fetchALL(PDO::FETCH_ASSOC);
-        foreach($resultado as $linha){
+        foreach ($resultado as $linha) {
 
             $responsavel = new Responsavel($linha['id_resp'], $linha['nome']);
 
-            $tarefa = new Tarefas ($linha['titulo'],$linha['descricao'], $responsavel, $linha['status']);
+            $tarefa = new Tarefas($linha['titulo'], $linha['descricao'], $responsavel, $linha['status']);
             $tarefa->setId($linha['id']);
             $tarefa;
         }

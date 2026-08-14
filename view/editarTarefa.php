@@ -17,8 +17,13 @@
     
 
     $controller = new controllerTarefa();
-    $tarefa = $controller->buscarTarefa($id);
-    var_dump($tarefa);
+    if ($tarefa = $controller->buscarTarefa($id)){
+        echo "não exite tarefa";
+    }
+    
+    $controller->editar();
+    //var_dump($tarefa);
+    //$controller->editar();
 
     ?>
     <main class="main-container">
@@ -85,6 +90,11 @@
                     }?>
                     >CANCELADA</option>
                 </select>
+            </div>
+            <div>
+                <input type="hidden" name="id" value="<?= $id; ?>">
+                <input type="subimit" value="ATUALIZAR">
+                <input type="reset" value="LIMPAR">
             </div>
             <div>
                 <button type="submit">Enviar</button>

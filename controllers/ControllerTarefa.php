@@ -36,13 +36,44 @@ class controllerTarefa
             }
         }
     }
-    
-    public function listar(): array{
-        return $this->daoTarefa->listarTodas();
+
+    public function editar(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'];
+            $titulo = $_POST['titulo'];
+            $descricao = $_POST['descricao'];
+            $responsavel = $_POST['id_responsavel'];
+            $status = $_POST['status'];
+
+            if (!empty($id) && !empty($titulo) && !empty($descricao) && !empty($responsavel) && !empty($status)) {
+                //$responsavel = $this->daoResponsavel->buscaReponsavel($id)
+                $responsavel = new Responsavel($responsavel, "Nathan");
+
+                //$tarefa = new Tarefas(null, $titulo, $descricao, $responsavel);
+                $tarefa = new Tarefas($titulo, $descricao, $responsavel, $status);
+                $tarefa->setId($id);
+                if ($this->daoTarefa->editar($tarefa)) {
+                    header("Location: listarTarefas.php?sucesso=1");
+                    exit;
+                } else {
+                    header("Location: cadastrarTarefa.php?erro=1");
+                    exit;
+                }
+            }
+        }
     }
-    
-    public function buscarTarefa($id): Tarefas{
-        return $this->daoTarefa->buscarTarefa($id);
+    public function excluir($id):bool{
+        return $this->daoTarefa->excluir($id);
     }
 
+    public function listar(): array
+    {
+        return $this->daoTarefa->listarTodas();
+    }
+
+    public function buscarTarefa($id):Tarefas
+    {
+        return $this->daoTarefa->buscarTarefa($id);
+    }
 }
