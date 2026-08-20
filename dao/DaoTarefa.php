@@ -2,7 +2,7 @@
 //include_once "Conexao.php";
 //include "Conexao.php";
 require_once "Conexao.php";
-include "../models/Tarefa.php";
+include_once "../models/Tarefa.php";
 
 class DaoTarefa
 {
@@ -31,11 +31,11 @@ class DaoTarefa
     public function editar(Tarefas $tarefas)
     {
         $sql = "UPDATE tarefa SET titulo = :titulo, descricao = :descricao, id_responsavel =:id_responsavel, status = :status
-        WHERE :titulo, :descricao, :id_responsavel, :status";
+        WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
         $id_responsavel = $tarefas->getResponsavel()->getId();
-
+        
         return $stmt->execute([
             ':id'=> $tarefas->getId(),
             ':titulo'=> $tarefas->getTitulo(),

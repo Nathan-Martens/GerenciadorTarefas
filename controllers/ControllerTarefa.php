@@ -1,6 +1,7 @@
 <?php
-include "../dao/DaoTarefa.php";
-include "../models/Responsavel.php";
+
+include_once "../dao/DaoTarefa.php";
+include_once "../models/Responsavel.php";
 
 class controllerTarefa
 {
@@ -46,10 +47,12 @@ class controllerTarefa
             $responsavel = $_POST['id_responsavel'];
             $status = $_POST['status'];
 
+            
+
             if (!empty($id) && !empty($titulo) && !empty($descricao) && !empty($responsavel) && !empty($status)) {
                 //$responsavel = $this->daoResponsavel->buscaReponsavel($id)
                 $responsavel = new Responsavel($responsavel, "Nathan");
-
+                
                 //$tarefa = new Tarefas(null, $titulo, $descricao, $responsavel);
                 $tarefa = new Tarefas($titulo, $descricao, $responsavel, $status);
                 $tarefa->setId($id);

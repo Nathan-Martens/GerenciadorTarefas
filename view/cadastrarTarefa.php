@@ -10,10 +10,14 @@
 
 <body>
     <?php
-    include "../controllers/ControllerTarefa.php";
+    include_once "../controllers/ControllerTarefa.php";
+    include_once "../controllers/controllerResponsavel";
 
-    $controller = new controllerTarefa();
-    $controller->cadastrar();
+    $controllerTarefa = new controllerTarefa();
+    $controllerResponsavel = new controllerResponsavel();
+
+    $controllerTarefa->cadastrar();
+    $listaResponsaveis = $controllerResponsavel->listar();
     ?>
     <main class="main-container">
         <section>
@@ -50,6 +54,21 @@
                     <option value="" disabled selected>Selecione um responsável</option>
                     <option value="1">Nome do responsável 1</option>
                     <option value="2">Nome do responsável 2</option>
+                </select>
+            </div>
+            <div>
+                <label for="id_responsavel">Responsável</label>
+                <select name="id_responsavel" id="id_responsavel">
+                    <option value="" disabled selected>Selecione um responsavel</option>
+                    <?php 
+                    foreach ($listaResponsaveis as $responsavel){
+                    ?>
+                        <option value= <?=  $responsavel->getId(); ?>>
+                            <?=  $responsavel->getNome(); ?>
+                        </option>
+                    <?php
+                    }
+                    ?>
                 </select>
             </div>
             <div>

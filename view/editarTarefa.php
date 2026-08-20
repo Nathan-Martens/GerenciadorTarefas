@@ -12,18 +12,21 @@
     <?php
     $id = $_GET["id"];
 
-    include "../controllers/ControllerTarefa.php";
+    include_once "../controllers/ControllerTarefa.php";
+    include_once "../controllers/ControllerResponsavel.php";
 
-    
+    $controllerTarefa = new controllerTarefa();
+    $controllerResponsavel = new controllerResponsavel();
 
-    $controller = new controllerTarefa();
-    if ($tarefa = $controller->buscarTarefa($id)){
+    if ($tarefa = $controllerTarefa->buscarTarefa($id)) {
         echo "não exite tarefa";
     }
-    
-    $controller->editar();
+
+    $controllerTarefa->editar();
     //var_dump($tarefa);
     //$controller->editar();
+
+    $listaResponsaveis = $controllerResponsavel->listar();
 
     ?>
     <main class="main-container">
@@ -42,7 +45,7 @@
         <form action="#" method="POST">
             <div>
                 <label for="titulo">Titulo: </label>
-                <input type="text" id="text" name="titulo" value= "<?= $tarefa->getTitulo(); ?>">
+                <input type="text" id="text" name="titulo" value="<?= $tarefa->getTitulo(); ?>">
             </div>
 
             <div>
@@ -55,40 +58,44 @@
                 <input type="number" id="id_responsavel" name="id_responsavel">
             </div>
         -->
+
             <div>
-                <?= $tarefa->getResponsavel()->getId(); ?>
-                <?= $tarefa->getResponsavel()->getNome(); ?>
-                <label for="id_responsavel">Registro Responsavel</label>
-                <select id = "id_responsavel" name= "id_responsavel">
-                    <option value="" disabled selected>Selecione um responsável</option>
-                    <option value="1">Nome do responsável 1</option>
-                    <option value="2">Nome do responsável 2</option>
+                <select name="id_responsavel" id="id_responsavel">
+                    <option value="" disabled>Selecione um responsável</option>
+
+                    <?php foreach ($listaResponsaveis as $responsavel): ?>
+
+                        <option
+                            value="<?= $responsavel->getId(); ?>"
+                            <?= $tarefa->getResponsavel()->getId() == $responsavel->getId() ? 'selected' : ''; ?>>
+                            <?= $responsavel->getNome(); ?>
+                        </option>
+
+                    <?php endforeach; ?>
                 </select>
+
             </div>
+
             <div>
                 <?= $tarefa->getStatus(); ?>
                 <label for="status">Status: </label>
                 <select id="status" name="status">
                     <option value="PENDENTE"
-                    <?php if ($tarefa->getStatus()==="PENDENTE"){
-                        echo "selected";
-                    }?>
-                    >PENDENTE</option>
+                        <?php if ($tarefa->getStatus() === "PENDENTE") {
+                            echo "selected";
+                        } ?>>PENDENTE</option>
                     <option value="EM_ANDAMENTO"
-                    <?php if ($tarefa->getStatus()==="EM ANDAMENTO"){
-                        echo "selected";
-                    }?>
-                    >EM ANDAMENTO</option>
+                        <?php if ($tarefa->getStatus() === "EM ANDAMENTO") {
+                            echo "selected";
+                        } ?>>EM ANDAMENTO</option>
                     <option value="CONCLUIDA"
-                    <?php if ($tarefa->getStatus()==="CONCLUIDA"){
-                        echo "selected";
-                    }?>
-                    >CONCLUIDA</option>
+                        <?php if ($tarefa->getStatus() === "CONCLUIDA") {
+                            echo "selected";
+                        } ?>>CONCLUIDA</option>
                     <option value="CANCELADA"
-                    <?php if ($tarefa->getStatus()==="CANCELADA"){
-                        echo "selected";
-                    }?>
-                    >CANCELADA</option>
+                        <?php if ($tarefa->getStatus() === "CANCELADA") {
+                            echo "selected";
+                        } ?>>CANCELADA</option>
                 </select>
             </div>
             <div>
